@@ -1,49 +1,35 @@
 #!/usr/bin/env node
 
-const { Command } = require("commander");
-const axios = require("axios")
+import { CLIEngine } from "./cli_engine/cli_engine";
+import { GreetCommand } from "./commands/greetCommand";
+import { AddCommand } from "./commands/addCommand";
+import { SubCommand } from "./commands/subCommand";
+import { MulCommand } from "./commands/mulCommand";
+import { DivCommand } from "./commands/divCommand";
+import { FileInfoCommand } from "./commands/fileInfoCommand";
+import { TimeCommand } from "./commands/timeCommand";
+import { JokeCommand } from "./commands/jokeCommand";
+import { QuoteCommand } from "./commands/quoteCommand";
+import { GithubUserCommand } from "./commands/githubUserCommand";
+import { WeatherCommand } from "./commands/weatherCommand";
+import { VersionCommand } from "./commands/versionCommand";
 
-const program = new Command();
+const engine = new CLIEngine();
 
-program.command("greet <name>").action((name: string) => {
-    console.log(`Hello ${name}`);
-});
+engine.registerCommands([
+  new GreetCommand(),
+  new AddCommand(),
+  new SubCommand(),
+  new MulCommand(),
+  new DivCommand(),
+  new FileInfoCommand(),
+  new TimeCommand(),
+  new JokeCommand(),
+  new QuoteCommand(),
+  new GithubUserCommand(),
+  new WeatherCommand(),
+  new VersionCommand(),
+]);
 
-program
-.command("add <a> <b>")
-.action((a:string,b:string)=>{
-    console.log(Number(a)+Number(b))
-})
-program
-.command("sub <a> <b>")
-.action((a:string,b:string)=>{
-    console.log(Number(a)-Number(b))
-})
-program
-.command("mul <a> <b>")
-.action((a:string,b:string)=>{
-    console.log(Number(a)*Number(b))
-})
-program
-.command("div <a> <b>")
-.action((a:string,b:string)=>{
+engine.run();
 
-    if (Number(b)!==0) console.log(Number(a)/Number(b))
-    else console.log("Denominator cannot be 0")
-})
-
-program
-.command("joke")
-.description("Random Joke")
-.action(async()=>{
-    try{
-        const res = await axios.get(`https://official-joke-api.appspot.com/random_joke`)
-        console.log(res)
-        // console.log(res.data.setup)
-        // console.log(res.data.punchline)
-    }catch(e){
-        console.log("Error:",e)
-    }
-})
-
-program.parse();
